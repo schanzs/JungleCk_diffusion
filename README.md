@@ -1,2 +1,4 @@
 # JungleCk_diffusion
 2D diffusion model across Jungle Creek earthflow
+
+The 2D hillslope diffusion and stream power model is built using Landlab (https://github.com/landlab/landlab) components for Schanz and Colee, submitted to ESurf. This examines how the MADstd value of an earthflow - in this case an earthflow off of Jungle Creek, Teanaway basin in Washington State is used - changes as the earthflow is inactive and subject to hillslope diffusion and stream power erosion. An ASCII file containing elevation is input; diffusion, flow routing, and stream power erosion are applied every 100 years for 10,000 years; and an ASCII file containing simulated elevations is output every 2 ky. The output can be imported to ArcGIS to be used as an input raster to the MAD script (https://github.com/cageo/Trevisani-2015)
