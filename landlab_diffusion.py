@@ -6,7 +6,7 @@ Created on Thu Nov 19 08:43:34 2020
 @author: sschanz
 """
 
-from landlab.components import LinearDiffuser, StreamPowerEroder, FlowAccumulator
+from landlab.components import LinearDiffuser, StreamPowerEroder, FlowAccumulator, DepressionFinderAndRouter
 from landlab.io import read_esri_ascii, write_esri_ascii
 from landlab.plot.imshow import imshow_grid
 import matplotlib.pyplot as plt
@@ -26,20 +26,22 @@ imshow_grid(mg, 'topographic__elevation')
 plt.title('Initial topography')
 
 ### DIFFUSE and EROD THROUGH TIME AND OUTPUT EVERY 2000 YEARS
-ld = LinearDiffuser(mg, linear_diffusivity = 0.002) # Diffusivity from Martin, 2000
-fa = FlowAccumulator(mg,flow_director = 'D8')
-sp = StreamPowerEroder(mg, K_sp = 0.0001)
+ld = LinearDiffuser(mg, linear_diffusivity = 0.002) # Diffusivity from Martin, 2000 for creep
+fa = FlowAccumulator(mg,flow_director = 'D8', depression_finder = DepressionFinderAndRouter)
+sp = StreamPowerEroder(mg, K_sp = 6e-7)
 
 dt = 100
 time = 10000
 
-for x in range(0,time,dt):
+for x in range(0,time+dt,dt):
     ld.run_one_step(dt)
-    fa.run_one_step()
-    sp.run_one_step(dt)
+    
+    # if running with stream power, uncomment the following lines:
+    # fa.run_one_step()
+    # sp.run_one_step(dt)
     
     if x%2000 == 0:
-        fname = os.path.join(pathlib.Path().absolute(), 'slide_sp_%s.asc' % x)
+        fname = os.path.join(pathlib.Path().absolute(), 'slide_%s.asc' % x)
         write_esri_ascii(fname, mg, 'topographic__elevation')
 
 ### PLOT END TOPOGRAPHY
